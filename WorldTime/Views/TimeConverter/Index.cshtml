@@ -1,0 +1,56 @@
+﻿@model WorldTime.Models.TimeConverterViewModel
+@{
+    ViewData["Title"] = "World Time Converter";
+}
+
+<h1>World Time Converter</h1>
+<img src="~/images/World_Time_Zones_Map.jpg" alt="World Time Converter" style="max-width:300px; margin-bottom:20px;" />
+
+<form asp-action="Index" method="post" class="row g-3" style="max-width:600px;">
+    <div class="col-12">
+        <label class="form-label">You are in</label>
+        <select asp-for="FromZoneId" class="form-select">
+            @foreach (var z in Model.AvailableZones)
+            {
+                <option value="@z.Id" selected="@(z.Id == Model.FromZoneId)">@z.DisplayName</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Date &amp; time there</label>
+        <input asp-for="SourceTime" asp-format="{0:yyyy-MM-ddTHH:mm}" type="datetime-local" step="60" class="form-control" /> 
+    </div>
+
+    <div class="col-12">
+        <label class="form-label">Convert to</label>
+        <select asp-for="ToZoneId" class="form-select">
+            <option value="">-- Select a time zone --</option>
+            @foreach (var z in Model.AvailableZones)
+            {
+                <option value="@z.Id" selected="@(z.Id == Model.ToZoneId)">@z.DisplayName</option>
+            }
+        </select>
+    </div>
+
+    <div class="col-12">
+        <button type="submit" class="btn btn-primary">Convert</button>
+    </div>
+</form>
+
+@if (Model.ConvertedTime.HasValue)
+{
+    <div class="alert alert-success mt-4" style="max-width:600px;">
+        <strong>Converted time:</strong> @Model.ConvertedTime.Value.ToString("dddd, MMMM d, yyyy h:mm tt")
+    </div>
+}
+
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger mt-3" style="max-width:600px;">
+        @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+        {
+            <p class="mb-0">@error.ErrorMessage</p>
+        }
+    </div>
+}
