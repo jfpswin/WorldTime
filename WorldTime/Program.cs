@@ -20,6 +20,8 @@ namespace WorldTime
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
+            builder.Services.AddHealthChecks();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -45,6 +47,8 @@ namespace WorldTime
                 name: "default",
                 pattern: "{controller=TimeConverter}/{action=Index}/{id?}");
             app.MapRazorPages();
+
+            app.MapHealthChecks("/health");
 
             app.Run();
         }
